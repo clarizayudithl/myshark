@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ridzky</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Lobster&family=Montserrat:wght@400;700&display=swap');
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #ffe6e6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: auto; /* Allow scrolling */
+            position: relative;
+        }
+
+        .container {
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+            max-width: 90%; /* Responsive max-width */
+            width: 500px; /* Default width */
+            animation: fadeIn 1.5s ease-in-out;
+            z-index: 2;
+            position: relative;
+        }
+
+        h1 {
+            font-family: 'Lobster', cursive;
+            color: #e60073;
+            animation: bounceIn 1s ease-in-out;
+        }
+
+        p {
+            color: #666;
+            font-size: 18px;
+            line-height: 1.6;
+        }
+
+        .signature {
+            margin-top: 20px;
+            font-style: italic;
+            color: #999;
+        }
+
+        .hearts {
+            position: relative;
+            margin-top: 20px;
+        }
+
+        .heart {
+            position: absolute;
+            bottom: -100px;
+            animation: rise 5s ease-in infinite;
+        }
+
+        .heart:nth-child(1) { left: 20%; animation-delay: 0s; }
+        .heart:nth-child(2) { left: 50%; animation-delay: 1s; }
+        .heart:nth-child(3) { left: 80%; animation-delay: 2s; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes bounceIn {
+            0%, 20%, 40%, 60%, 80%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        @keyframes rise {
+            0% { bottom: -100px; opacity: 0; }
+            50% { opacity: 1; }
+            100% { bottom: 100vh; opacity: 0; }
+        }
+
+        .firework {
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            background-color: #e60073;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #e60073, 0 0 20px #e60073;
+            animation: firework 1s ease-out forwards;
+        }
+
+        @keyframes firework {
+            0% { opacity: 1; transform: scale(1); }
+            100% { opacity: 0; transform: scale(3); }
+        }
+
+        .fireworks-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .game {
+            margin-top: 20px;
+        }
+
+        .game input {
+            font-size: 18px;
+            padding: 5px;
+        }
+
+        .game button {
+            font-size: 18px;
+            padding: 5px 10px;
+            margin-left: 10px;
+        }
+
+        .next-page-button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 18px;
+            color: #fff;
+            background-color: #e60073;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .next-page-button:hover {
+            background-color: #d7006c;
+        }
+
+        .photo {
+            margin-top: 20px;
+        }
+
+        .photo img {
+            max-width: 100%; /* Ensure the image scales with the container */
+            height: auto;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #e60073;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #d7006c;
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.5);
+        }
+        .modal-content {
+            background-color: #fff;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px;
+            text-align: center;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .password-input {
+            margin-top: 20px;
+            font-size: 18px;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+
+        .password-button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            font-size: 18px;
+            color: #fff;
+            background-color: #e60073;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .password-button:hover {
+            background-color: #d7006c;
+        }
+
+        .error-message {
+            color: red;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+
+        /* Flower button styles */
+        .flower-button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px;
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .flower-button:hover {
+            transform: scale(1.1);
+        }
+
+        .flower-icon {
+            width: 50px; /* Adjust size as needed */
+            height: auto;
+        }
+
+        /* Confirmation Modal styles */
+        .confirmation-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.5);
+            text-align: center;
+        }
+        .confirmation-modal-content {
+            background-color: #fff;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px;
+        }
+        .confirmation-button {
+            padding: 10px 20px;
+            font-size: 18px;
+            color: #fff;
+            background-color: #e60073;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px;
+        }
+        .confirmation-button:hover {
+            background-color: #d7006c;
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Music -->
+    <audio id="background-music" src="sound/sound1.mp3" preload="auto">
+        Your browser does not support the audio element.
+    </audio>
+
+    <div class="fireworks-container"></div>
+
+    <div class="container">
+        <h1>Selamat Ulang Tahun, Sayang!</h1>
+        <p>"Today is your day"</p>
+        <p>Thanks for being patient with me, loving me, and putting in all that effort. I’m so grateful to have you in my life. Let’s chase a brighter future together. May all your dreams and hopes come true</p>
+        <p>Selamat ulang tahun, sayangku</p>
+
+        <div class="photo">
+            <img id="clickable-photo" src="images/c1.jpeg" alt="Photo">
+        </div>
+
+        <div class="hearts">
+            <img src="images/pita.png" alt="heart" class="heart" width="50">
+            <img src="images/hati.png" alt="heart" class="heart" width="70">
+            <img src="images/bintang.png" alt="heart" class="heart" width="60">
+        </div>
+
+        <!-- Flower button -->
+        <a href="#" id="modalBtn" class="next-page-button">A glimpse of the moment</a>
+        <a href="game.html" class="next-page-button">Main game yuk..</a>
+        <a href="#" id="flowerModalBtn" class="next-page-button">A little magic at the end</a>
+    </div>
+
+    <!-- Modal -->
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>A glimpse of the moment</h2>
+            <p>Clue : The city where we first met</p>
+            <input type="password" id="passwordInput" class="password-input" placeholder="Enter password">
+            <button id="passwordButton" class="password-button">Submit</button>
+            <p id="errorMessage" class="error-message"></p>
+        </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div id="confirmationModal" class="confirmation-modal">
+        <div class="confirmation-modal-content">
+            <h2>Are you ready to open the final surprise?</h2>
+            <button id="confirmYes" class="confirmation-button">Yes</button>
+            <button id="confirmNo" class="confirmation-button">No</button>
+        </div>
+    </div>
+
+    <script>
+        function showFireworks() {
+            for (let i = 0; i < 20; i++) {
+                createFirework();
+            }
+        }
+
+        function createFirework() {
+            const firework = document.createElement('div');
+            firework.classList.add('firework');
+            document.querySelector('.fireworks-container').appendChild(firework);
+
+            const x = Math.random() * window.innerWidth;
+            const y = Math.random() * window.innerHeight;
+            firework.style.left = `${x}px`;
+            firework.style.top = `${y}px`;
+
+            firework.addEventListener('animationend', () => {
+                firework.remove();
+            });
+        }
+
+        window.onload = () => {
+            setInterval(showFireworks, 1000);
+        };
+
+        // JavaScript for clicking photo
+        document.getElementById('clickable-photo').addEventListener('click', function() {
+            var audio = document.getElementById('background-music');
+            audio.play(); // Play audio on photo click
+        });
+
+        // Modal logic
+        var modal = document.getElementById("myModal");
+        var btn = document.getElementById("modalBtn");
+        var span = document.getElementsByClassName("close")[0];
+        var passwordButton = document.getElementById("passwordButton");
+        var passwordInput = document.getElementById("passwordInput");
+        var errorMessage = document.getElementById("errorMessage");
+
+        btn.onclick = function() {
+            modal.style.display = "block";
+        }
+
+        span.onclick = function() {
+            modal.style.display = "none";
+        }
+
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+
+        passwordButton.onclick = function() {
+            var password = passwordInput.value;
+            if (password === "sukabumi") {
+                window.location.href = "moment.html";
+            } else {
+                errorMessage.textContent = "Yahh salah, Kamu gak sayang aku 😡😡";
+            }
+        }
+
+        // Confirmation Modal logic
+        var flowerModal = document.getElementById("confirmationModal");
+        var flowerBtn = document.getElementById("flowerModalBtn");
+        var confirmYes = document.getElementById("confirmYes");
+        var confirmNo = document.getElementById("confirmNo");
+
+        flowerBtn.onclick = function(event) {
+            event.preventDefault();
+            flowerModal.style.display = "block";
+        }
+
+        confirmYes.onclick = function() {
+            window.location.href = "flower.html";
+        }
+
+        confirmNo.onclick = function() {
+            flowerModal.style.display = "none";
+        }
+
+        window.onclick = function(event) {
+            if (event.target == flowerModal) {
+                flowerModal.style.display = "none";
+            }
+        }
+    </script>
+</body>
+</html>

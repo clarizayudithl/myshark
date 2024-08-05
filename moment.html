@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Love Gallery</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #fce4ec; /* Soft pink background */
+            color: #333;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            box-sizing: border-box;
+        }
+        header {
+            background-color: #f8bbd0; /* Light pink */
+            padding: 30px;
+            border-bottom: 4px solid #f48fb1; /* Slightly darker pink */
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+            position: relative;
+            z-index: 10;
+        }
+        h1 {
+            margin: 0;
+            font-size: 3.5em;
+            color: #d81b60; /* Deep pink */
+            font-family: 'Dancing Script', cursive;
+            text-transform: uppercase;
+            text-align: center;
+        }
+        .container {
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+        }
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            opacity: 0;
+            animation: fadeIn 1s forwards;
+            animation-delay: 0.5s;
+        }
+        .gallery-item {
+            position: relative;
+            width: 100%;
+            height: 300px;
+            perspective: 1000px;
+            overflow: hidden;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        }
+        .gallery-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+        }
+        .gallery-item .card {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+        .gallery-item:hover .card {
+            transform: rotateY(180deg);
+        }
+        .gallery-item .front, .gallery-item .back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 15px;
+        }
+        .gallery-item .front {
+            background: no-repeat center center;
+            background-size: cover;
+            filter: grayscale(100%) blur(2px);
+            transition: filter 0.5s;
+        }
+        .gallery-item:hover .front {
+            filter: grayscale(0) blur(0);
+        }
+        .gallery-item .back {
+            background: rgba(255, 255, 255, 0.8); /* Light overlay with white */
+            color: #d81b60; /* Deep pink */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform: rotateY(180deg);
+            padding: 20px;
+            box-sizing: border-box;
+            font-size: 1.2em;
+            text-align: center;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+        }
+        .video-container {
+            margin: 20px auto;
+            max-width: 80%;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+        }
+        video {
+            width: 100%;
+            border-radius: 15px;
+            display: block;
+        }
+        .back-button {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 12px 25px;
+            font-size: 1.2em;
+            color: #fff;
+            background: linear-gradient(135deg, #f06292, #d81b60); /* Gradient pink */
+            border: none;
+            border-radius: 25px;
+            text-align: center;
+            text-decoration: none;
+            transition: transform 0.3s, background 0.3s, box-shadow 0.3s;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            z-index: 20;
+        }
+        .back-button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 300%;
+            height: 300%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translate(-50%, -50%) rotate(45deg);
+            transition: opacity 0.3s;
+            opacity: 0;
+        }
+        .back-button:hover::before {
+            opacity: 1;
+        }
+        .back-button:hover {
+            background: linear-gradient(135deg, #d81b60, #f06292); /* Reverse gradient */
+            transform: scale(1.05);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+        }
+        footer {
+            background-color: #f8bbd0; /* Light pink */
+            padding: 15px;
+            border-top: 4px solid #f48fb1; /* Slightly darker pink */
+            box-shadow: 0 -4px 8px rgba(0,0,0,0.1);
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+        }
+        footer p {
+            margin: 0;
+            color: #d81b60; /* Deep pink */
+            text-align: center;
+        }
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>A glimpse of the moment</h1>
+    </header>
+
+    <div class="container">
+        <a href="ultah.html" class="back-button">Balik lagi yuk !!</a>
+        <div class="gallery">
+            <div class="gallery-item">
+                <div class="card">
+                    <div class="front" style="background-image: url('images/gif1.png');"></div>
+                    <div class="back"></div>
+                </div>
+            </div>
+            <div class="gallery-item">
+                <div class="card">
+                    <div class="front" style="background-image: url('images/puncak1.jpeg');"></div>
+                    <div class="back"></div>
+                </div>
+            </div>
+            <div class="gallery-item">
+                <div class="card">
+                    <div class="front" style="background-image: url('images/puncak2.jpeg');"></div>
+                    <div class="back"></div>
+                </div>
+            </div>
+            <div class="gallery-item">
+                <div class="card">
+                    <div class="front" style="background-image: url('images/gif2.png');"></div>
+                    <div class="back"></div>
+                </div>
+            </div>
+            <div class="gallery-item">
+                <div class="card">
+                    <div class="front" style="background-image: url('images/gif3.png');"></div>
+                    <div class="back"></div>
+                </div>
+            </div>
+            <div class="gallery-item">
+                <div class="card">
+                    <div class="front" style="background-image: url('images/skb1.jpeg');"></div>
+                    <div class="back"></div>
+                </div>
+            </div>
+            <div class="gallery-item">
+                <div class="card">
+                    <div class="front" style="background-image: url('images/c3.jpeg');"></div>
+                    <div class="back"></div>
+                </div>
+            </div>
+            <div class="gallery-item">
+                <div class="card">
+                    <div class="front" style="background-image: url('images/bintang.png');"></div>
+                    <div class="back"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="video-container">
+            <video id="video" controls>
+                <source src="images/vid1.mp4" type="video/mp4">
+            </video>
+        </div>
+        <audio id="background-music" src="images/bs1.mpeg" loop></audio>
+    </div>
+
+    <script>
+        const video = document.getElementById('video');
+        const backgroundMusic = document.getElementById('background-music');
+
+        video.addEventListener('play', () => {
+            video.muted = true; // Mute the video
+            backgroundMusic.play(); // Play the background music
+        });
+
+        video.addEventListener('pause', () => {
+            backgroundMusic.pause(); // Pause the background music when video is paused
+        });
+    </script>
+
+</body>
+</html>

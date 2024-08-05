@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Puzzle Drag and Drop</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            overflow: auto; /* Enable scrolling */
+        }
+
+        #puzzle-container {
+            display: grid;
+            grid-template-columns: repeat(4, 100px);
+            grid-template-rows: repeat(4, 100px);
+            gap: 2px;
+            border: 2px solid #333;
+            margin-bottom: 20px;
+        }
+
+        .puzzle-slot {
+            width: 100px;
+            height: 100px;
+            border: 1px dashed #aaa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #fff;
+        }
+
+        #pieces-container {
+            display: flex;
+            flex-wrap: wrap;
+            max-width: 420px;
+        }
+
+        .puzzle-piece {
+            width: 100px;
+            height: 100px;
+            cursor: grab;
+            margin: 2px;
+            background-size: 400px 400px;
+        }
+
+        #success-message {
+            display: none;
+            font-size: 24px;
+            color: green;
+            margin-top: 20px;
+        }
+
+        #fireworks {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .firework {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: red;
+            border-radius: 50%;
+            animation: explode 1s linear infinite;
+        }
+
+        #back-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #FF69B4; /* Warna pink */
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        #back-button:hover {
+            background-color: #FF1493; /* Warna pink lebih gelap */
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f0f0f0;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #FF69B4;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #FF1493;
+        }
+
+        /* Animation for fireworks */
+        @keyframes explode {
+            0% { transform: scale(1) translate(0, 0); opacity: 1; }
+            100% { transform: scale(10) translate(200px, -200px); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <h1 style="text-align: center;">Setiap keping puzzle yang kamu susun<br> menandakan usahamu menyempurnakan hubungan</h1>
+    <div id="puzzle-container">
+        <!-- Slots for puzzle pieces -->
+    </div>
+    <div id="pieces-container">
+        <!-- Pieces to be dragged -->
+    </div>
+    <div id="success-message">Selamat! Pacar Aku Hebat!</div>
+    <div id="fireworks"></div>
+    <button id="back-button" onclick="goBack()">Balik lagi yuk !!</button>
+
+    <script>
+        const imageSrc = 'images/c1.jpeg'; // Ganti dengan path gambar yang sesuai
+        const puzzleContainer = document.getElementById('puzzle-container');
+        const piecesContainer = document.getElementById('pieces-container');
+        const successMessage = document.getElementById('success-message');
+        const fireworks = document.getElementById('fireworks');
+        const rows = 4;
+        const cols = 4;
+        let pieces = [];
+
+        function createPuzzleSlots() {
+            for (let i = 0; i < rows * cols; i++) {
+                const slot = document.createElement('div');
+                slot.classList.add('puzzle-slot');
+                slot.dataset.index = i;
+                slot.ondrop = drop;
+                slot.ondragover = allowDrop;
+                puzzleContainer.appendChild(slot);
+            }
+        }
+
+        function createPuzzlePieces() {
+            for (let row = 0; row < rows; row++) {
+                for (let col = 0; col < cols; col++) {
+                    const piece = document.createElement('div');
+                    piece.classList.add('puzzle-piece');
+                    piece.style.backgroundImage = `url(${imageSrc})`;
+                    piece.style.backgroundPosition = `${-col * 100}px ${-row * 100}px`;
+                    piece.draggable = true;
+                    piece.dataset.index = row * cols + col;
+                    piece.ondragstart = drag;
+                    pieces.push(piece);
+                }
+            }
+
+            shuffle(pieces);
+            pieces.forEach(piece => piecesContainer.appendChild(piece));
+        }
+
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function allowDrop(e) {
+            e.preventDefault();
+        }
+
+        function drag(e) {
+            e.dataTransfer.setData('text', e.target.dataset.index);
+        }
+
+        function drop(e) {
+            e.preventDefault();
+            const pieceIndex = e.dataTransfer.getData('text');
+            const piece = document.querySelector(`.puzzle-piece[data-index='${pieceIndex}']`);
+            if (e.target.classList.contains('puzzle-slot') && !e.target.firstChild) {
+                e.target.appendChild(piece);
+                checkWin();
+            }
+        }
+
+        function checkWin() {
+            let isComplete = true;
+            document.querySelectorAll('.puzzle-slot').forEach((slot, index) => {
+                // Check if the slots from the second row to the last row are correctly filled
+                if (index >= cols && (!slot.firstChild || slot.firstChild.dataset.index != index)) {
+                    isComplete = false;
+                }
+            });
+
+            if (isComplete) {
+                successMessage.style.display = 'block';
+                launchFireworks();
+            }
+        }
+
+        function launchFireworks() {
+            fireworks.style.display = 'block';
+            for (let i = 0; i < 10; i++) {
+                const firework = document.createElement('div');
+                firework.classList.add('firework');
+                firework.style.left = `${Math.random() * 100}%`;
+                firework.style.top = `${Math.random() * 100}%`;
+                firework.style.animationDuration = `${Math.random() + 0.5}s`;
+                fireworks.appendChild(firework);
+            }
+
+            setTimeout(() => {
+                fireworks.style.display = 'none';
+                fireworks.innerHTML = '';
+            }, 3000);
+        }
+
+        function goBack() {
+            window.location.href = 'ultah.html';
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            createPuzzleSlots();
+            createPuzzlePieces();
+        });
+    </script>
+</body>
+</html>
